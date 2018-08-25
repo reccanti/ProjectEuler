@@ -25,9 +25,23 @@ fn naive_sum_even_fibonacci (amount: u32) -> BigUint {
     sum
 }
 
+fn sum_only_even_fibonacci (amount: u32) -> BigUint {
+    let init = (
+        BigUint::from(2 as u32),
+        BigUint::from(8 as u32),
+        BigUint::from(10 as u32)
+    );
+    let (_, _, sum) = (2..(amount / 3)).fold(init, |acc, _i| {
+        let (n1, n2, sum) = acc;
+        let next = n1 + (n2.clone() * 4 as u32);
+        (n2, next.clone(), sum + next)
+    });
+    sum
+}
+
 fn main() {
     let duration = SystemTime::now();
-    let result = naive_sum_even_fibonacci(4000000);
+    let result = sum_only_even_fibonacci(4000000);
     let time = match duration.elapsed() {
         Ok(elapsed) => {
             elapsed.as_secs()
@@ -44,4 +58,9 @@ fn main() {
 #[test]
 fn test_naive_sum_even_fibonacci () {
     assert_eq!(naive_sum_even_fibonacci(10), BigUint::from(44 as u32));
+}
+
+#[test]
+fn test_sum_onlys_even_fibonacci () {
+    assert_eq!(sum_only_even_fibonacci(10), BigUint::from(44 as u32));
 }
